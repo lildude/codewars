@@ -1,22 +1,22 @@
 #!/bin/bash
 set -e
 REALPATH=$(cd $(dirname "$0")/.. && pwd)
-KATAS=${REALPATH}/katas/$rating
+KATAS=${REALPATH}/katas/${rating}
 API_TOKEN=${API_TOKEN:-$(cat "${REALPATH}/.token")}
 
 response=$(curl "https://www.codewars.com/api/v1/code-challenges/ruby/train" \
  -X POST \
  -H "Authorization: ${API_TOKEN}")
 
-kataname="$(echo "$response" | jq -r '.["slug"]' | tr '-' '_')"
-rating="$(echo "$response" | jq -r '.["rank"]' | tr -d '-')kyu"
-name="$(echo "$response" | jq -r '.["name"]')"
+kataname="$(echo "${response}" | jq -r '.["slug"]' | tr '-' '_')"
+rating="$(echo "${response}" | jq -r '.["rank"]' | tr -d '-')kyu"
+name="$(echo "${response}" | jq -r '.["name"]')"
 
-if [ ! -d "${KATAS}/$rating" ]; then
-  mkdir "${KATAS}/$rating"
+if [ ! -d "${KATAS}/${rating}/${kataname}" ]; then
+  mkdir -p "${KATAS}/${rating}/${kataname}"
 fi
 
-echo -e "# $name\n" > "${REALPATH}/katas/${rating}/${kataname}_README.md"
-echo "$response" | jq -r '.["description"]' >> "${REALPATH}/katas/${rating}/README_${kataname}.md"
-echo "$response" | jq -r '.["session"]["setup"]' > "${REALPATH}/katas/${rating}/${kataname}.rb"
-echo "$response" | jq -r '.["session"]["exampleFixture"]' > "${REALPATH}/katas/${rating}/${kataname}_test.rb"
+echo -e "# ${name}\n" > "${REALPATH}/katas/${rating}/${kataname}/README.md"
+echo "${response}" | jq -r '.["description"]' >> "${REALPATH}/katas/${rating}/${kataname}/README.md"
+echo "${response}" | jq -r '.["session"]["setup"]' > "${REALPATH}/katas/${rating}/${kataname}/solution.rb"
+echo "${response}" | jq -r '.["session"]["exampleFixture"]' > "${REALPATH}/katas/${rating}/${kataname}/test.rb"
