@@ -32,6 +32,6 @@ echo "${response}" | jq -r '.["session"]["setup"]' > "${REALPATH}/katas/${rating
 
 echo "require_relative '../../../test_framework'" > "${REALPATH}/katas/${rating}/${kataname}/test.rb"
 echo "require_relative './solution'" >> "${REALPATH}/katas/${rating}/${kataname}/test.rb"
-echo "${response}" | jq -r '.["session"]["exampleFixture"]' > "${REALPATH}/katas/${rating}/${kataname}/test.rb"
+echo "${response}" | jq -r '.["session"]["exampleFixture"]' >> "${REALPATH}/katas/${rating}/${kataname}/test.rb"
 name=$(echo "${response}" | jq -r '.["name"]')
 echo "'$name' saved to katas/$rating/$kataname/"
