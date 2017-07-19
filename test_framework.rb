@@ -1,3 +1,5 @@
+require 'colorize'
+
 $describing = false
 
 class Test
@@ -29,13 +31,13 @@ class Test
       log_call(:expect)
 
       if block_given? ? block.call() : !!passed
-        success_msg = "Test Passed"
+        success_msg = "Test Passed".green
         success_msg += ": " + options[:success_msg] if options[:success_msg]
 
         log success_msg + "\n", true
       else
         message ||= "Something is wrong"
-        log "Test Failed: " + message.to_s + "\n", true
+        log "Test Failed: ".red + message.to_s + "\n", true
 
         if $describing
           @@failed << Test::Error.new(message)
