@@ -3,8 +3,18 @@ set -e
 REALPATH=$(cd $(dirname "$0")/.. && pwd)
 KATAS=${REALPATH}/katas/${rating}
 API_TOKEN=${API_TOKEN:-$(cat "${REALPATH}/.token")}
+KATA=${1:-}
+METHOD=$([ -z "$KATA" ] && echo "POST" || echo "GET")
+API_URL="https://www.codewars.com/api/v1/code-challenges"
+SLUG="ruby/train"
 
-response=$(curl "https://www.codewars.com/api/v1/code-challenges/ruby/train" \
+if [ -n "$KATA" ]; then
+  kata_slug=$(curl -s "$API_URL/$KATA" \
+ -X GET | jq -r '.["slug"]')
+  SLUG="$kata_slug/$SLUG"
+fi
+
+response=$(curl -s "$API_URL/$SLUG" \
  -X POST \
  -H "Authorization: ${API_TOKEN}")
 
