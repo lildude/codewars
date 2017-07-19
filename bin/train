@@ -29,4 +29,7 @@ fi
 echo -e "# ${name}\n" > "${REALPATH}/katas/${rating}/${kataname}/README.md"
 echo "${response}" | jq -r '.["description"]' >> "${REALPATH}/katas/${rating}/${kataname}/README.md"
 echo "${response}" | jq -r '.["session"]["setup"]' > "${REALPATH}/katas/${rating}/${kataname}/solution.rb"
+
+echo "require_relative '../../../test_framework'" > "${REALPATH}/katas/${rating}/${kataname}/test.rb"
+echo "require_relative './solution'" >> "${REALPATH}/katas/${rating}/${kataname}/test.rb"
 echo "${response}" | jq -r '.["session"]["exampleFixture"]' > "${REALPATH}/katas/${rating}/${kataname}/test.rb"
