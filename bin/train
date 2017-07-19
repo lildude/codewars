@@ -18,7 +18,7 @@ response=$(curl -s "$API_URL/$SLUG" \
  -X POST \
  -H "Authorization: ${API_TOKEN}")
 
-kataname="$(echo "${response}" | jq -r '.["slug"]' | tr '-' '_')"
+kataname="$(echo "${response}" | jq -r '.["slug"]')"
 rating="$(echo "${response}" | jq -r '.["rank"]' | tr -d '-')kyu"
 name="$(echo "${response}" | jq -r '.["name"]')"
 
@@ -28,10 +28,13 @@ fi
 
 echo -e "# ${name}\n" > "${REALPATH}/katas/${rating}/${kataname}/README.md"
 echo "${response}" | jq -r '.["description"]' >> "${REALPATH}/katas/${rating}/${kataname}/README.md"
+echo -e "\n\nURL: http://www.codewars.com/kata/$kataname/train/ruby" >> "${REALPATH}/katas/${rating}/${kataname}/README.md"
+
 echo "${response}" | jq -r '.["session"]["setup"]' > "${REALPATH}/katas/${rating}/${kataname}/solution.rb"
 
 echo "require_relative '../../../test_framework'" > "${REALPATH}/katas/${rating}/${kataname}/test.rb"
 echo "require_relative './solution'" >> "${REALPATH}/katas/${rating}/${kataname}/test.rb"
 echo "${response}" | jq -r '.["session"]["exampleFixture"]' >> "${REALPATH}/katas/${rating}/${kataname}/test.rb"
+
 name=$(echo "${response}" | jq -r '.["name"]')
 echo "'$name' saved to katas/$rating/$kataname/"
