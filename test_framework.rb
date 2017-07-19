@@ -17,7 +17,7 @@ class Test
       if $describing
         message = message.to_s
         @@html << message
-        @@html << '<br>' unless no_line_break
+        @@html << "\n" unless no_line_break
 
       else
         puts message.to_s
@@ -32,10 +32,10 @@ class Test
         success_msg = "Test Passed"
         success_msg += ": " + options[:success_msg] if options[:success_msg]
 
-        log '<div class="console-passed">' + success_msg + '</div>', true
+        log success_msg + "\n", true
       else
         message ||= "Something is wrong"
-        log "<div class='console-failed'>Test Failed: " + message.to_s + "</div>", true
+        log "Test Failed: " + message.to_s + "\n", true
 
         if $describing
           @@failed << Test::Error.new(message)
@@ -50,13 +50,11 @@ class Test
       log_call(:describe)
       begin
         $describing = true
-        @@html << '<div class="console-describe"><h6>'
         @@html << message
-        @@html << ':</h6>'
         yield
       ensure
         $describing = false
-        @@html << '</div>'
+        @@html << "\n"
         puts @@html.join
         @@html.clear
         @@before_blocks.clear
@@ -69,9 +67,7 @@ class Test
     def it(message)
       log_call(:it)
       begin
-        @@html << '<div class="console-it"><h6>'
         @@html << message
-        @@html << ':</h6>'
         @@before_blocks.each do |block|
           block.call
         end
@@ -83,7 +79,7 @@ class Test
           end
         end
       ensure
-        @@html << '</div>'
+        @@html << "\n"
       end
     end
 
@@ -147,7 +143,7 @@ class Test
       log_call(:assert_equals)
       if actual != expected
         msg = msg ? msg + ' -  ' : ''
-        message = "\#{msg}\Expected: " + expected.inspect + ", instead got: " + actual.inspect
+        message = "Expected: " + expected.inspect + ", instead got: " + actual.inspect
         Test.expect(false, message)
       else
         options[:success_msg] ||= 'Value == ' + expected.inspect
@@ -159,7 +155,7 @@ class Test
       log_call(:assert_not_equals)
       if actual == expected
         msg = msg ? msg + ' - ' : ''
-        message = "\#{msg}\Not expected: " + actual.inspect
+        message = "Not expected: " + actual.inspect
         Test.expect(false, message)
       else
         options[:success_msg] ||= 'Value != ' + expected.inspect
